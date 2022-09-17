@@ -72,13 +72,12 @@ const treeToArray
   };
 const insert
   = tree =>
-    value => {
-
-      const array    = treeToArray( tree );
-      const newArray = immutableSort( [...array, value] );
-      return makeTree( newArray );
-
-    };
+    value =>
+      makeTree(
+        immutableSort(
+          [...treeToArray( tree ), value]
+        )
+      );
 const remove
   = tree =>
     value => {
