@@ -1,11 +1,13 @@
 const generateArray
   = length =>
-    ( Array( length ) )
+    [...( Array( length ) )
       .fill( 0 )
       .map( () =>
         Math.floor( Math.random() * length * 10 ) )
       .filter( ( item, index, array ) =>
-        array.indexOf( item ) === index );
+        array.indexOf( item ) === index )]
+      .sort( ( next, previous ) =>
+        next - previous );
 const makeNode
   = data =>
     left =>
