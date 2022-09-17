@@ -15,16 +15,16 @@ const makeNode
           left,
           right,
         } );
+const makeRight = right =>
+  ( right.length > 0 ? makeTree( right ) : undefined );
+const makeLeft  = left =>
+  ( left.length > 0 ? makeTree( left ) : undefined );
 const makeTree
 = array => {
 
-  const makeRight = right =>
-    ( right.length > 0 ? makeTree( right ) : undefined );
-  const makeLeft  = left =>
-    ( left.length > 0 ? makeTree( left ) : undefined );
-  const middle    = Math.floor( array.length / 2 );
-  const left      = array.slice( 0, middle );
-  const right     = array.slice( middle + 1 );
+  const middle = Math.floor( array.length / 2 );
+  const left   = array.slice( 0, middle );
+  const right  = array.slice( middle + 1 );
 
   return makeNode( array[ middle ] )(
     makeLeft( left )
@@ -89,11 +89,22 @@ const remove
       return makeTree( newArray );
 
     };
+const find
+  = tree =>
+    value => {
+
+      const array = treeToArray( tree );
+      if ( !array.includes( value ) ) { return "Not Found" }
+      return array.indexOf( value );
+
+    };
 const array = generateArray( 15 );
 const tree  = makeTree( array );
 console.log( "initial", array );
-prettyPrint( makeTree( array ) );
+prettyPrint( tree );
 console.log( "inserted" );
 prettyPrint( insert( tree )( 999 ) );
 console.log( "removed" );
 prettyPrint( remove( tree )( 67 ) );
+console.log( "find 66" );
+console.log( find( tree )( 66 ) );
