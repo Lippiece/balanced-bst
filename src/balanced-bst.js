@@ -92,13 +92,12 @@ const remove
     };
 const find
   = tree =>
-    value => {
-
-      const array = treeToArray( tree );
-      if ( !array.includes( value ) ) { return "Not Found" }
-      return array.indexOf( value );
-
-    };
+    value =>
+      ( tree.data === value
+        ? tree
+        : ( tree.data > value
+          ? find( tree.left )( value )
+          : find( tree.right )( value ) ) );
 const traverseLevelOrder
   = tree =>
     callback =>
