@@ -99,13 +99,49 @@ const find
       return array.indexOf( value );
 
     };
-const array = generateArray( 15 );
+const traverseLevelOrder
+  = tree =>
+    callback =>
+      ( queue = [tree] ) => {
+
+        if ( queue.length === 0 ) { return }
+
+        const node = queue[ 0 ];
+
+        traverseLevelOrder( tree )( callback )( enqueue( queue )( callback ) );
+
+      };
+const enqueue
+= queue =>
+  callback => {
+
+    const node = queue[ 0 ];
+    if ( node === undefined ) { return queue.slice( 1 ) }
+    callback( node );
+    return [
+      ...queue.slice( 1 ),
+      node.left,
+      node.right,
+    ];
+
+  };
+const array = generateArray( 5 );
 const tree  = makeTree( array );
 console.log( "initial", array );
+
 prettyPrint( tree );
-console.log( "inserted" );
-prettyPrint( insert( tree )( 999 ) );
-console.log( "removed" );
-prettyPrint( remove( tree )( 67 ) );
-console.log( "find 66" );
-console.log( find( tree )( 66 ) );
+console.log( "------------------" );
+traverseLevelOrder( tree )( node =>
+  console.log( node.data ) )();
+/*
+   console.log( "inserted" );
+   prettyPrint( insert( tree )( 999 ) );
+   console.log( "------------------" );
+   console.log( "removed" );
+   prettyPrint( remove( tree )( 67 ) );
+   console.log( "------------------" );
+   console.log( "find 66" );
+   console.log( find( tree )( 66 ) );
+console.log( "------------------" );
+console.log( "traverseLevelOrder" );
+  */
