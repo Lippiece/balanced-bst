@@ -74,10 +74,10 @@ const treeToArray
   };
 const insert
   = tree =>
-    value =>
+    values =>
       makeTree(
         immutableSort(
-          [...treeToArray( tree ), value]
+          [...treeToArray( tree ), ...values]
         )
       );
 const remove
@@ -107,7 +107,9 @@ const traverseLevelOrder
 
         const node = queue[ 0 ];
 
-        traverseLevelOrder( tree )( callback )( enqueue( queue )( callback ) );
+        traverseLevelOrder( tree )( callback )(
+          enqueue( queue )( callback )
+        );
 
       };
 const enqueue
@@ -124,23 +126,72 @@ const enqueue
     ];
 
   };
+const traverseInOrder
+  = tree =>
+    callback => {
+
+      if ( tree === undefined ) { return }
+      traverseInOrder( tree.left )( callback );
+      callback( tree );
+      traverseInOrder( tree.right )( callback );
+
+    };
+const traversePreOrder
+  = tree =>
+    callback => {
+
+      if ( tree === undefined ) { return }
+      callback( tree );
+      traversePreOrder( tree.left )( callback );
+      traversePreOrder( tree.right )( callback );
+
+    };
+const traversePostOrder
+  = tree =>
+    callback => {
+
+      if ( tree === undefined ) { return }
+      traversePostOrder( tree.left )( callback );
+      traversePostOrder( tree.right )( callback );
+      callback( tree );
+
+    };
+const getHeight
+  = node => {
+
+    if ( !node ) { return -1 }
+
+    const left  = getHeight( node.left );
+    const right = getHeight( node.right );
+
+    return Math.max( left, right ) + 1;
+
+  };
+const getDepth
+  = node => {};
 const array = generateArray( 5 );
 const tree  = makeTree( array );
 console.log( "initial", array );
 
 prettyPrint( tree );
 console.log( "------------------" );
-traverseLevelOrder( tree )( node =>
-  console.log( node.data ) )();
+console.log( "inserted" );
+prettyPrint( insert( tree )( [66] ) );
+console.log( "------------------" );
+console.log( "find 66" );
+console.log( find( insert( tree )( [66] ) )( 66 ) );
+console.log( "------------------" );
 /*
-   console.log( "inserted" );
-   prettyPrint( insert( tree )( 999 ) );
-   console.log( "------------------" );
-   console.log( "removed" );
-   prettyPrint( remove( tree )( 67 ) );
-   console.log( "------------------" );
-   console.log( "find 66" );
-   console.log( find( tree )( 66 ) );
+console.log( "height", getHeight( tree ) );
+console.log( "------------------" );
+console.log( "removed" );
+prettyPrint( remove( tree )( 67 ) );
 console.log( "------------------" );
 console.log( "traverseLevelOrder" );
+traverseLevelOrder( tree )( node =>
+  console.log( node.data ) )();
+  console.log( "------------------" );
+  console.log( "Inorder" );
+  traverseInOrder( tree )( node =>
+    console.log( node.data ) );
   */
