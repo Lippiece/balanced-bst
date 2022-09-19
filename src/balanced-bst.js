@@ -1,13 +1,13 @@
 const generateArray
   = length =>
-    [...( Array( length ) )
-      .fill( 0 )
-      .map( () =>
-        Math.floor( Math.random() * length * 10 ) )
-      .filter( ( item, index, array ) =>
-        array.indexOf( item ) === index )]
-      .sort( ( next, previous ) =>
-        next - previous );
+    immutableSort(
+      [...( Array( length ) )
+        .fill( 0 )
+        .map( () =>
+          Math.floor( Math.random() * length * 10 ) )
+        .filter( ( item, index, array ) =>
+          array.indexOf( item ) === index )]
+    );
 const makeNode
   = data =>
     left =>
@@ -17,10 +17,6 @@ const makeNode
           left,
           right,
         } );
-const makeRight = right =>
-  ( right.length > 0 ? makeTree( right ) : undefined );
-const makeLeft  = left =>
-  ( left.length > 0 ? makeTree( left ) : undefined );
 const makeTree
 = array => {
 
@@ -35,6 +31,10 @@ const makeTree
   );
 
 };
+const makeRight = right =>
+  ( right.length > 0 ? makeTree( right ) : undefined );
+const makeLeft  = left =>
+  ( left.length > 0 ? makeTree( left ) : undefined );
 const printTree
   = tree => {
 
@@ -83,14 +83,12 @@ const insert
       );
 const remove
   = tree =>
-    value => {
-
-      const array    = treeToArray( tree );
-      const newArray = array.filter( item =>
-        item !== value );
-      return makeTree( newArray );
-
-    };
+    value =>
+      makeTree(
+        treeToArray( tree )
+          .filter( item =>
+            item !== value )
+      );
 const find
   = tree =>
     value =>
@@ -179,18 +177,39 @@ const getDepth
       );
 
     };
-const array       = generateArray( 5 );
+const isBalanced
+  = tree => {
+
+    if ( tree === undefined ) { return true }
+    return Math.abs(
+      getHeight( tree.left ) - getHeight( tree.right )
+    ) <= 1
+    && isBalanced( tree.left )
+    && isBalanced( tree.right );
+
+  };
+const balance
+  = tree =>
+    makeTree( immutableSort( treeToArray( tree )
+      .filter(
+        ( item, index, array ) =>
+          array.indexOf( item ) === index
+      ) ) );
+const array       = generateArray( 15 );
 const initialTree = makeTree( array );
 const tree        = insert( initialTree )( [100, 200, 300] );
 console.log( "initial", array );
 console.log( "------------------" );
 prettyPrint( tree );
 console.log( "------------------" );
+console.log( "balance" );
+prettyPrint( balance( tree ) );
+console.log( "------------------" );
+/*
 console.log( "traverseLevelOrder" );
 traverseLevelOrder( tree )( node =>
   console.log( node.data ) )();
 console.log( "------------------" );
-/*
 const heightToFind = find( newTree )( 2 );
 const depthToFind  = find( newTree )( newTree.data );
 console.log( `Height of ${ heightToFind.data } is`, getHeight( heightToFind ) );
